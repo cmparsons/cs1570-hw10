@@ -25,10 +25,21 @@ private:
   Point m_loc; //(x, y) location in town grid
   char m_symbol; //representation in town grid
 
+  // Description: Checks if pants are next to tailor.
+  // pre: None
+  // post: If taior is in an adjacent space, returns true. Otherwise, returns
+  //       false.
+  bool next_to_tailor(const Tailor & victim) const;
+
+  // Description: Phantom pants kill the tailor.
+  // pre: None
+  // post: The tailor's alive member is set to false and health is set to 0.
+  void kill(Tailor & victim) const;
+
 public:
   // Description: Constructor for the Phantom_Pants class.
   // pre: None
-  // post: Sets m_loc to (-1, -1), by default and its m_loc to PHANTOM_PANTS.
+  // post: Sets m_loc to (-1, -1), by default and m_symbol to PHANTOM_PANTS.
   Phantom_Pants() : m_symbol(PHANTOM_PANTS) {}
 
   // Description: Overloaded extraction operator for Phantom_Pants class.
@@ -49,21 +60,11 @@ public:
 
   // Description: Chase the passed tailor and possibly kill.
   // pre: None
-  // post: The phantom pants have moved one space closer to tailor, by trying
-  //       to reach its y-coordinate first, then its x-coordinate. Returns true
-  //       if the phantom pants killed the tailor. Otherwise, returns false.
+  // post: The phantom pants have moved one space closer to tailor by trying
+  //       to reach its y-coordinate first, then its x-coordinate. Checks before
+  //       and after moving if tailor is next to pants. If so, pants kills tailor
+  //       and return true. Otherwise, returns false.
   bool chase(Tailor & victim, Town & town);
-
-  // Description: Check if the tailor is in an adjacent spot.
-  // pre: None
-  // post: Returns true if the point of the tailor is in an spot next to a pair
-  //       of phantom pants. Otherwise, returns false.
-  bool next_to_tailor(const Tailor & victim) const;
-
-  // Description: Phantom pants kill the tailor.
-  // pre:
-  // post: The tailor's alive member is set to false and health is set to 0.
-  void kill(Tailor & victim);
 };
 
 #endif

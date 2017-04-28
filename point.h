@@ -47,7 +47,7 @@ public:
   // pre: None
   // post: Returns a point that is one space above, below, right, or left of
   //       current point, depending on passed argument.
-  Point get_adjacent(const short direction) const;
+  Point get_adjacent(const short & direction) const;
 
   // Description: Overloaded assignment operator for Point class.
   // pre: None

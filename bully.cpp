@@ -21,7 +21,7 @@ Bully::Bully()
   fin >> m_name; //read in name from bullies.dat
 }
 
-bool Bully::punch(Tailor & nerd, Town & town) const
+void Bully::punch(Tailor & nerd, Town & town) const
 {
   //amount of money bully takes from the tailor
   short money_taken = nerd.get_money() * make_percent(m_punch_power);
@@ -36,7 +36,7 @@ bool Bully::punch(Tailor & nerd, Town & town) const
   nerd.place_me(town);
 
   cout << "PUNCHED by " << m_name  << "!" << endl;
-  return true;
+  return;
 }
 
 void Bully::threaten() const
@@ -47,11 +47,11 @@ void Bully::threaten() const
   short line = random(MAX_MESSAGES - 1, 0);
   string message = "";
 
-  //ignore all lines up to line that corresponds to message of interest
-  for(int i = 0; i < line; i++)
-    fin.ignore(MAX_CHARACTERS, '\n'); //should read up to delimiter
+  //last message received should be message output
+  for(int i = 0; i <= line; i++)
+    getline(fin, message); //get the corresponding message
 
-  getline(fin, message); //get the corresponding message
+  fin.close(); //close the file
 
   //print out the message from the bully
   cout << m_name << ": " << message << endl;

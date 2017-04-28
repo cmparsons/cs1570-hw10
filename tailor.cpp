@@ -11,6 +11,26 @@
 #include "general.h"
 #include "phantom_pants.h"
 
+ostream & operator <<(ostream & out, const Tailor & foo)
+{
+  out << foo.m_name; //diplay name
+
+  //display alive status
+  if(foo.m_alive)
+    out << " is alive";
+  else
+    out << " is dead";
+
+  //diplay location in town
+  out << " in " << foo.m_loc;
+
+  //display money, number of pants, and health
+  out << " with $" << foo.m_money << ", "
+      << foo.m_pants << " pants, "
+      << "and health " << foo.m_health << ".\n";
+  return out;
+}
+
 Tailor::Tailor(const string name, const char sym)
 {
   m_name = name;
@@ -43,67 +63,85 @@ void Tailor::place_me(Town & town)
 void Tailor::rand_walk(Town & town)
 {
   Point new_location;
-  bool took_step = false;
+  bool occupied = true;
+  bool surrounded = false;
 
-  while(!took_step) //loop until tailor took a step in a blank space
+  //loop until tailor took a step in a blank space or if surrounded
+  while(occupied && !surrounded)
   {
     //find a random direction to take a step
     new_location = m_loc.get_adjacent(random(NUM_DIRECTIONS, 0));
 
     //check if the location is occupied
-    if(!town.space_occupied(new_location))
-      took_step = true;
-  }
-  //clear contents of tailor's previous location
-  town.clear_grid_content(m_loc);
+    occupied = town.space_occupied(new_location);
 
-  //set tailor's new coordinates and update town
-  m_loc = new_location;
-  town.set_in_grid(m_loc, m_symbol);
+    //check if tailor is trapped
+    surrounded = town.surrounded(m_loc);
+  }
+
+  //if not surrounded, update coordinates and town
+  if(!surrounded)
+  {
+    //vacate tailor's previous location
+    town.clear_grid_content(m_loc);
+
+    //update tailor's coordinates
+    m_loc = new_location;
+
+    //set tailor's new coordinates and update town
+    town.set_in_grid(m_loc, m_symbol);
+  }
   return;
 }
 
 void Tailor::interact(Town & town, Bully bullies[], Phantom_Pants evil_pants[])
 {
   Point adjacent;
+  char adjacent_content;
   short direction = 0;
+  bool keep_checking = true; //keep checking adjacent spaces
 
   //select which bully will interact with tailor(if applicable)
   short which_bully = random(NUM_BULLY_NAMES - 1, 0);
   Bully thug = bullies[which_bully];
-  bool tailor_punched = false;
 
-  static short phantom_pants_made = 0; //track number of phatom pants spawned
+  static short phantom_pants_made = 0; //track number of phantom pants made
 
   //loops until every adjacent space is checked or tailor got punched by bully
-  while(direction < NUM_DIRECTIONS && !tailor_punched)
+  while(direction < NUM_DIRECTIONS && keep_checking)
   {
-    //get an adjacent space to check
+    //get an adjacent space and check its contents
     adjacent = m_loc.get_adjacent(direction);
+    adjacent_content = town.get_grid_content(adjacent);
 
-    //if space is a house, there might be possible exchange
-    if(town.get_grid_content(adjacent) == HOUSE && percent_probability()
-       <= SELL_PANTS_CHANCE && town.get_pants_to_exchange(adjacent))
+    switch (adjacent_content)
     {
-      sell_pants(town, adjacent);
-    }
-    //if space is a bully, uh-oh
-    else if(town.get_grid_content(adjacent) == BULLY)
-    {
-      //see if tailor will be punched or threatened by bully
-      if(percent_probability() <= thug.get_punch_prob())
-      {
-        tailor_punched = thug.punch(*this, town);
-
-        //pair of phantom pants created
-        if(phantom_pants_made < MAX_PHANTOM_PANTS)
+      case HOUSE:
+        //possibilty of exchange with house that has pants to exchange
+        if(percent_probability() <= SELL_PANTS_CHANCE
+           && town.get_pants_to_exchange(adjacent))
         {
-          evil_pants[phantom_pants_made].place_me(town);
-          phantom_pants_made++;
+          sell_pants(town, adjacent);
         }
-      }
-      else
-        thug.threaten();
+        break;
+      case BULLY:
+        //tailor might get punched
+        if(percent_probability() <= thug.get_punch_prob())
+        {
+           thug.punch(*this, town);
+
+          //create a pair of phantom pants
+          if(phantom_pants_made < MAX_PHANTOM_PANTS)
+          {
+            evil_pants[phantom_pants_made].place_me(town);
+            phantom_pants_made++;
+            m_pants--;
+          }
+        }
+        else
+          thug.threaten();
+        keep_checking = false; //stop interacting during this turn
+        break;
     }
     direction++; //check next space
   }
@@ -112,8 +150,8 @@ void Tailor::interact(Town & town, Bully bullies[], Phantom_Pants evil_pants[])
 
 void Tailor::sell_pants(Town & town, const Point & point)
 {
-  town.set_pants_to_exchange(false, point); //house now has no pants to exchange
-  m_money += PANTS_PROFIT; //update tailor's money
+  town.bought_pants(point); //house now has no pants to exchange
+  m_money += PANTS_PROFIT; //update tailor's money and pants inventory
   m_pants--;
 
   //print out the house where sale occurred
@@ -123,13 +161,21 @@ void Tailor::sell_pants(Town & town, const Point & point)
 
 void Tailor::set_money(const float money)
 {
-  m_money = money;
+  //to account for if money dipped below 0
+  if(money < 0)
+    m_money = 0;
+  else
+    m_money = money;
   return;
 }
 
 void Tailor::set_health(const short health)
 {
-  m_health = health;
+  //set health to passed value if non-negative or make 0
+  if(health >= DEAD)
+    m_health = health;
+  else
+    m_health = DEAD;
 
   if(m_health == DEAD) //if tailor has 0 heath points, they dead
     m_alive = false;

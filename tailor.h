@@ -3,7 +3,7 @@
 // Filename: town.h
 // Assignment: HW #10
 // Due Date: 5/3/17
-// Purpose: File contains the tailor class defintion.
+// Purpose: File contains the Tailor class defintion.
 
 #ifndef TAILOR_H
 #define TAILOR_H
@@ -84,7 +84,7 @@ public:
   // Description: Set the Tailor's money member.
   // pre: None
   // post: The Tailor's money member has been set to the passed argument.
-  void set_money(const float m_money);
+  void set_money(const float money);
 
   // Description: Get the Tailor's location member.
   // pre: None
@@ -114,6 +114,7 @@ public:
   //       and a pair of Phantom Pants is generated as result of being
   //       punched by a bully. Or message is output to screen by bully.
   void interact(Town & town, Bully Bullies[], Phantom_Pants evil_pants[]);
+
 };
 
 #endif
