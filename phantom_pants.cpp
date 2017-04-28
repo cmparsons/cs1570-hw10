@@ -11,6 +11,12 @@
 #include "tailor.h"
 #include "general.h"
 
+ostream & operator <<(ostream & out, const Phantom_Pants & pants)
+{
+  out << "Phantom pants at " << pants.m_loc << endl;
+  return out;
+}
+
 void Phantom_Pants::place_me(Town & town)
 {
   Point new_location; //set to default of (-1, -1)
@@ -33,16 +39,16 @@ bool Phantom_Pants::chase(Tailor & victim, Town & town)
 
   short direction = 0; //direction pants will travel
   bool occupied = true; //check for an available space
-  bool killed_victim = false;
+  bool killed = false; //determine if tailor was killed
   Point new_location;
+  bool surrounded = false;
 
-  //first check if tailor is next to pants(prevent overlapping)
+  //check if pants are next to tailor before moving(prevent overlap)
   if(next_to_tailor(victim))
   {
     kill(victim);
-    killed_victim = true;
-    return killed_victim;
-    cout << "killed before move" << endl;
+    killed = true;
+    return killed;
   }
 
   //if pants is not next to the tailor, chase the tailor
@@ -71,27 +77,38 @@ bool Phantom_Pants::chase(Tailor & victim, Town & town)
   //check if desired space is filled
   occupied = town.space_occupied(new_location);
 
-  //if not, find a space that is not occupied
-  while(occupied)
+  while(occupied && !surrounded)
   {
+    //get an adjacent spot
     new_location = m_loc.get_adjacent(random(NUM_DIRECTIONS - 1, 0));
+
+    //find out if the spot is occupied
     occupied = town.space_occupied(new_location);
+
+    //check if pants are trapped
+    surrounded = town.surrounded(m_loc);
   }
 
-  //clear contents of pants' previous location
-  town.clear_grid_content(m_loc);
+  //if not surrounded, update coordinates and town
+  if(!surrounded)
+  {
+    //clear contents of pants' previous location
+    town.clear_grid_content(m_loc);
 
-  //set pants' new coordinates and update town
-  m_loc = new_location;
-  town.set_in_grid(m_loc, m_symbol);
+    //update pants coordinates
+    m_loc = new_location;
 
-  //check if pants are next to tailor after moving
+    //set pants' new coordinates and update town
+    town.set_in_grid(m_loc, m_symbol);
+  }
+
+  //check if tailor is next to pants after moving
   if(next_to_tailor(victim))
   {
     kill(victim);
-    killed_victim = true;
+    killed = true;
   }
-  return killed_victim;
+  return killed;
 }
 
 bool Phantom_Pants::next_to_tailor(const Tailor & victim) const
@@ -115,7 +132,7 @@ bool Phantom_Pants::next_to_tailor(const Tailor & victim) const
   return found_tailor;
 }
 
-void Phantom_Pants::kill(Tailor & victim)
+void Phantom_Pants::kill(Tailor & victim) const
 {
   victim.set_health(DEAD);
   return;

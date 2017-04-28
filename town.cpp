@@ -3,13 +3,28 @@
 // Filename: town.cpp
 // Assignment: HW #10
 // Due Date: 5/3/17
-// Purpose: File contains functions for the town class.
+// Purpose: File contains functions for the Town class.
 
 #include "town.h"
 #include "general.h"
 #include "tailor.h"
 #include "point.h"
 #include "bully.h"
+
+ostream & operator <<(ostream & out, const Town & town)
+{
+  //i = row, j = column
+  for(int i = 0; i < town.town_size; i++)
+  {
+    for(int j = 0; j < town.town_size; j++) //print out row i
+    {
+      color_town(town.town_grid[i][j].symbol);
+      out << " ";
+    }
+    out << "\n";
+  }
+  return out;
+}
 
 Town::Town(const short bullies, const short houses, const short size)
 {
@@ -62,7 +77,7 @@ void Town::build()
   {
     //set house in grid and up its status of having pants to exchange
     set_in_grid(loc, HOUSE);
-    town_grid[loc.get_x_coord()][loc.get_y_coord()].pants_to_exchange = true;
+    town_grid[loc.get_y_coord()][loc.get_x_coord()].pants_to_exchange = true;
 
     placed = false;
 
@@ -114,42 +129,43 @@ Point Town::get_empty_point() const
 bool Town::space_occupied(const Point & check_space) const
 {
   //if space is empty, return false
-  return (town_grid[check_space.get_x_coord()]
-          [check_space.get_y_coord()].symbol != EMPTY);
+  return (town_grid[check_space.get_y_coord()]
+          [check_space.get_x_coord()].symbol != EMPTY);
 }
 
 void Town::set_in_grid(const Point & point, const char sym)
 {
-  town_grid[point.get_x_coord()][point.get_y_coord()].symbol = sym;
+  town_grid[point.get_y_coord()][point.get_x_coord()].symbol = sym;
   return;
 }
 
 void Town::clear_grid_content(const Point & point)
 {
-  town_grid[point.get_x_coord()][point.get_y_coord()].symbol = EMPTY;
+  town_grid[point.get_y_coord()][point.get_x_coord()].symbol = EMPTY;
   return;
 }
 
 bool Town::surrounded(const Point & point) const
 {
-  short x_coord = point.get_x_coord();
-  short y_coord = point.get_y_coord();
+  Point adjacent;
+  short direction = 0;
+  bool occupied = true;
 
-  //check adjacent spaces for an empty space
-  if(town_grid[x_coord + 1][y_coord].symbol == EMPTY ||
-     town_grid[x_coord - 1][y_coord].symbol == EMPTY ||
-     town_grid[x_coord][y_coord + 1].symbol == EMPTY ||
-     town_grid[x_coord][y_coord - 1].symbol == EMPTY)
+  while(occupied && direction < NUM_DIRECTIONS)
   {
-    return false;
+    //get a point adjacent to the passed point
+    adjacent = point.get_adjacent(direction);
+
+    //check if space is occupied in that point
+    occupied = space_occupied(adjacent);
+    direction++;
   }
-  else
-    return true;
+  return occupied;
 }
 
-void Town::set_pants_to_exchange(const bool bought_pants, const Point & point)
+void Town::bought_pants(const Point & house)
 {
-  town_grid[point.get_x_coord()][point.get_y_coord()].pants_to_exchange
-  = bought_pants;
+  town_grid[house.get_y_coord()][house.get_x_coord()].pants_to_exchange
+  = false;
   return;
 }

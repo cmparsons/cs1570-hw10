@@ -9,6 +9,24 @@
 #include "point.h"
 #include "town.h"
 
+ostream & operator <<(ostream & out, const Point & point)
+{
+  out << "(" << point.m_x_coord + 1 << ", " << point.m_y_coord + 1 << ")";
+  return out;
+}
+
+bool operator ==(const Point & point1, const Point & point2)
+{
+  return (point1.m_x_coord == point2.m_x_coord
+          && point1.m_y_coord == point2.m_y_coord);
+}
+
+bool operator !=(const Point & point1, const Point & point2)
+{
+  return !(point1 == point2);
+}
+
+
 Point::Point(const short x_coord, const short y_coord)
 {
   m_x_coord = x_coord;
@@ -22,13 +40,11 @@ Point & Point::operator =(const Point & point)
   return (*this);
 }
 
-Point Point::get_adjacent(const short direction) const
+Point Point::get_adjacent(const short & direction) const
 {
-  //will hold coordinates of new point
   Point adjacent(m_x_coord, m_y_coord); //initialized to current point
 
-  //update appropriate coordinate
-  switch (direction)
+  switch (direction) //update the appropriate coordinate
   {
     case UP:
       adjacent.m_y_coord++;

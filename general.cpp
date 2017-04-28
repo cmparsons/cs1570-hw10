@@ -17,17 +17,28 @@ int percent_probability()
   return random(100, 1);
 }
 
-void print_final_results(const Tailor & tailor, const bool killed)
+void print_final_results(const Tailor & tailor, const bool killed,
+  const long step, const Phantom_Pants pants[])
 {
   cout << "\n\nFINAL RESULTS:\n";
   cout << "-------------------------------" << endl;
 
+  //print steps tailor took during simulation
+  cout << "Steps: " << step << "\n\n";
+
+  //print any phantom pants alive in town
+  for(int i = 0; i < MAX_PHANTOM_PANTS; i++)
+    if(pants[i].get_location() != UNSPAWNED)
+      cout << pants[i];
+
+  cout << "\nCause of end: ";
+
   //print simulation results
   if(killed)
     cout << "Died from phantom pants!!!!" << endl;
-  else if(tailor.get_health() == DEAD)
+  else if(tailor.get_health() == DEAD && !killed)
     cout << "Hit by too many bullies!!!" << endl;
-  else if(tailor.get_pants() == 0)
+  else if(tailor.get_pants() == SOLD_ALL)
     cout << "Sold all the pants!!!!" << endl;
   else
     cout << "Reached max steps of " << MAX_STEPS << endl;
@@ -36,6 +47,7 @@ void print_final_results(const Tailor & tailor, const bool killed)
   cout << tailor << endl;
   return;
 }
+
 void color_town(const char & object)
 {
   switch(object)
@@ -56,62 +68,4 @@ void color_town(const char & object)
       cout << object;
   }
   return;
-}
-
-bool operator ==(const Point & point1, const Point & point2)
-{
-  return (point1.m_x_coord == point2.m_x_coord
-          && point1.m_y_coord == point2.m_y_coord);
-}
-
-bool operator !=(const Point & point1, const Point & point2)
-{
-  return !(point1 == point2);
-}
-
-ostream & operator <<(ostream & out, const Tailor & foo)
-{
-  out << foo.m_name; //diplay name
-
-  //display alive status
-  if(foo.m_alive)
-    out << " is alive";
-  else
-    out << " is dead";
-
-  //diplay location in town
-  out << " in " << foo.m_loc;
-
-  //display money, number of pants, and health
-  out << " with $" << foo.m_money << ", "
-      << foo.m_pants << " pants, "
-      << "and health " << foo.m_health << ".\n";
-  return out;
-}
-
-ostream & operator <<(ostream & out, const Town & town)
-{
-  //i = row, j = column
-  for(int i = 0; i < town.town_size; i++)
-  {
-    for(int j = 0; j < town.town_size; j++) //print out row i
-    {
-      color_town(town.town_grid[i][j].symbol);
-      out << " ";
-    }
-    out << "\n";
-  }
-  return out;
-}
-
-ostream & operator <<(ostream & out, const Point & point)
-{
-  out << "(" << point.m_x_coord + 1 << ", " << point.m_y_coord + 1 << ")";
-  return out;
-}
-
-ostream & operator <<(ostream & out, const Phantom_Pants & pants)
-{
-  out << "Phantom pants at " << pants.m_loc << endl;
-  return out;
 }

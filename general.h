@@ -3,7 +3,7 @@
 // Filename: general.h
 // Assignment: HW #10
 // Due Date: 5/3/17
-// Purpose: File contains general functions and libraries for HW9.
+// Purpose: File contains general functions and libraries for HW10.
 
 #ifndef GENERAL_H
 #define GENERAL_H
@@ -16,13 +16,23 @@
 using namespace std;
 
 const long MAX_STEPS = 1000; //max steps for simulation
-const Point UNSPAWNED; //point corresponding to an object that hasn't spawned
+const Point UNSPAWNED; //point not on the grid: coordinates (-1, -1)
+
+
+// Description: Colors the symbol of each member in the town grid.
+// pre: None
+// post: House: yellow
+//       Bully: red
+//       Phantom Pants: green
+//       Wall: blue
+void color_town(const char & object);
 
 // Description: Prints the final results of the simulation.
 // pre: None
 // post: The reason why the simulation ended has been printed on the screen,
 //       and the tailor's status at the end.
-void print_final_results(const Tailor & tailor, const bool killed);
+void print_final_results(const Tailor & tailor, const bool killed,
+  const long step, const Phantom_Pants pants[]);
 
 // Description: Generates a vaule from 1-100.
 // pre: None

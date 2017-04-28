@@ -3,7 +3,7 @@
 // Filename: town.h
 // Assignment: HW #10
 // Due Date: 5/3/17
-// Purpose: File contains the town class defintion.
+// Purpose: File contains the Town class defintion.
 
 #ifndef TOWN_H
 #define TOWN_H
@@ -83,7 +83,7 @@ public:
   // pre: x < town_size and y < town_size
   // post: The char in the index of town_grid[x][y] is returned.
   char get_grid_content(const Point & p) const
-  {return town_grid[p.get_x_coord()][p.get_y_coord()].symbol;}
+  {return town_grid[p.get_y_coord()][p.get_x_coord()].symbol;}
 
   // Description: Checks if a space in town is occupied.
   // pre: None
@@ -108,16 +108,17 @@ public:
   // post: A point that is empty is returned.
   Point get_empty_point() const;
 
-  // Description: Set space in Town's pants_to_exchange.
+  // Description: Set space in Town's pants_to_exchange to false.
   // pre: None
-  // post: The space in Town's pants_to_exchange is set to the passed argument.
-  void set_pants_to_exchange(const bool bought_pants, const Point & point);
+  // post: The pants_to_exchange member is set to false for the space in
+  //       town passed.
+  void bought_pants(const Point & house);
 
   // Description: Get space in Town's pants_to_exchange member.
   // pre: None
   // post: The space in the Town's pants_to_exchange member has been returned.
   bool get_pants_to_exchange(const Point & p) const
-  {return town_grid[p.get_x_coord()][p.get_y_coord()].pants_to_exchange;}
+  {return town_grid[p.get_y_coord()][p.get_x_coord()].pants_to_exchange;}
 };
 
 #endif

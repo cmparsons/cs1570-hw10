@@ -3,7 +3,7 @@
 // Filename: bully.h
 // Assignment: HW #10
 // Due Date: 5/3/17
-// Purpose: File contains the bully class defintion.
+// Purpose: File contains the Bully class defintion.
 
 #ifndef BULLY_H
 #define BULLY_H
@@ -23,7 +23,6 @@ const short PUNCH = 10; //amount tailor's health is reduced by after punch
 
 const short NUM_BULLY_NAMES = 4; //number of possible names for bullies
 const short MAX_MESSAGES = 10; //number of messages in message.dat
-const short MAX_CHARACTERS = 100; //arbritary value for characters to ignore
 
 class Bully
 {
@@ -45,7 +44,7 @@ public:
   // post: Tailor's health is reduced by PUNCH, money is reduced by a
   //       percent of bully's punch power, and location is in a random spot in
   //       in the town. Returns true to calling function.
-  bool punch(Tailor & nerd, Town & town) const;
+  void punch(Tailor & nerd, Town & town) const;
 
   // Description: Print out a random threatening message.
   // pre: message.dat must exist in directory
