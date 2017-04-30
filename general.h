@@ -16,6 +16,7 @@
 #include <ncurses.h>
 using namespace std;
 
+const short NAME_MAX = 20; //max characters for a name
 const long MAX_STEPS = 1000; //max steps for simulation
 const Point UNSPAWNED; //point not on the grid: coordinates (-1, -1)
 
