@@ -12,13 +12,15 @@
 #include <cstdlib>
 #include <ctime>
 #include "point.h"
-#include "tailor.h"
 #include <ncurses.h>
 using namespace std;
 
-const short NAME_MAX = 20; //max characters for a name
+class Tailor;
+class Phantom_Pants;
+
 const long MAX_STEPS = 1000; //max steps for simulation
 const Point UNSPAWNED; //point not on the grid: coordinates (-1, -1)
+const int NAME = 20;
 
 const int PRINT_Y = 22; //coordinates to print updates from simulation
 const int PRINT_X = 0;

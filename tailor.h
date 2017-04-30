@@ -35,7 +35,7 @@ const int PRINT_TAILOR_X = 0;
 class Tailor
 {
 private:
-  char m_name[NAME_MAX];
+  char m_name[NAME];
   short m_money; //current funds
   char m_symbol; //representation on the town grid
   bool m_alive; //dead/alive status

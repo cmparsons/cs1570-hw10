@@ -8,6 +8,7 @@
 #ifndef BULLY_H
 #define BULLY_H
 
+#include "general.h"
 #include <fstream>
 #include <string>
 using namespace std;
@@ -27,7 +28,7 @@ const short MAX_MESSAGES = 10; //number of messages in message.dat
 class Bully
 {
 private:
-  char m_name[NAME_MAX];
+  char m_name[NAME];
   short m_punch_power;
   short m_punch_probability;
 
