@@ -33,10 +33,7 @@ void clear_line(const int line_y, const int line_x);
 
 // Description: Gets value that corresponds to an object's color.
 // pre: None
-// post: House: yellow
-//       Bully: red
-//       Phantom Pants: green
-//       Wall: blue
+// post: An integer value corresponding to a color pair has been returned.
 int color_town(const char & object);
 
 // Description: Prints the final results of the simulation.
