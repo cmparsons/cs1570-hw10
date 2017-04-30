@@ -13,19 +13,24 @@
 #include <ctime>
 #include "point.h"
 #include "tailor.h"
+#include <ncurses.h>
 using namespace std;
 
 const long MAX_STEPS = 1000; //max steps for simulation
 const Point UNSPAWNED; //point not on the grid: coordinates (-1, -1)
 
+const int PRINT_Y = 22; //coordinates to print updates from simulation
+const int PRINT_X = 0;
 
-// Description: Colors the symbol of each member in the town grid.
+void clear_line(const int line_y, const int line_x);
+
+// Description: Gets value that corresponds to an object's color.
 // pre: None
 // post: House: yellow
 //       Bully: red
 //       Phantom Pants: green
 //       Wall: blue
-void color_town(const char & object);
+int color_town(const char & object);
 
 // Description: Prints the final results of the simulation.
 // pre: None

@@ -11,9 +11,13 @@
 #include "general.h"
 #include "bully.h"
 #include "phantom_pants.h"
+#include <unistd.h>
 
-int main()
+int main(int argc, char* argv[])
 {
+
+  const long DELAY = 100000;
+
   srand(time(NULL)); //seed the RNG
 
   //set up the town and all characters involved with the simulation
@@ -29,9 +33,7 @@ int main()
   short pants_left = Milhouse.get_pants(); //track pants inventory
   int j = 0; //traverse thru phantom pants
 
-
   Milhouse.place_me(Springfield);
-  cout << Milhouse;
   cout << Springfield;
 
   /*
@@ -70,14 +72,19 @@ int main()
       Milhouse.interact(Springfield, Thugs, Evil_Pants);
       cout << Springfield;
     }
-
     //check Milhouse's condition
     health = Milhouse.get_health();
     pants_left = Milhouse.get_pants();
+
+    cout << Milhouse;
+    usleep(DELAY);
     step++;
   }
+  refresh();
 
   //collect and present stats of the simulation
   print_final_results(Milhouse, killed, step, Evil_Pants);
+  getch(); //wait to return back to normal terminal
+  endwin(); //return to terminal window
   return 0;
 }

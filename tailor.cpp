@@ -13,27 +13,31 @@
 
 ostream & operator <<(ostream & out, const Tailor & foo)
 {
-  out << foo.m_name; //diplay name
+  clear_line(PRINT_TAILOR_Y, PRINT_TAILOR_X);
+  
+  printw("%s", foo.m_name);
 
   //display alive status
   if(foo.m_alive)
-    out << " is alive";
+    printw(" is alive");
   else
-    out << " is dead";
+    printw(" is dead");
 
   //diplay location in town
-  out << " in " << foo.m_loc;
+  printw(" in ");
+  out << foo.m_loc;
 
   //display money, number of pants, and health
-  out << " with $" << foo.m_money << ", "
-      << foo.m_pants << " pants, "
-      << "and health " << foo.m_health << ".\n";
+  printw(" with $%i,", foo.m_money);
+  printw(" %i pants,", foo.m_pants);
+  printw(" and health %i.", foo.m_health);
+  refresh();
   return out;
 }
 
-Tailor::Tailor(const string name, const char sym)
+Tailor::Tailor(const char name[], const char sym)
 {
-  m_name = name;
+  strcpy(m_name, name);
   m_symbol = sym;
   m_money = random(MAX_START_MONEY, MIN_START_MONEY);
   m_alive = true;
@@ -155,29 +159,27 @@ void Tailor::sell_pants(Town & town, const Point & point)
   m_pants--;
 
   //print out the house where sale occurred
-  cout << "Pants exchanged from: " << point << endl;
+  clear_line(PRINT_Y, PRINT_X);
+  move(PRINT_Y, PRINT_X);
+  printw("Pants exchanged from ");
+  cout << point;
+  refresh();
   return;
 }
 
-void Tailor::set_money(const float money)
+void Tailor::set_money(const short money)
 {
   //to account for if money dipped below 0
-  if(money < 0)
-    m_money = 0;
-  else
-    m_money = money;
+  m_money = (money < 0) ? 0 : money;
   return;
 }
 
 void Tailor::set_health(const short health)
 {
   //set health to passed value if non-negative or make 0
-  if(health >= DEAD)
-    m_health = health;
-  else
-    m_health = DEAD;
+  m_health = (health >= DEAD) ? health : DEAD;
 
-  if(m_health == DEAD) //if tailor has 0 heath points, they dead
-    m_alive = false;
+  //if tailor has 0 heath points, they dead
+  m_alive = (m_health == DEAD) ? false : true;
   return;
 }

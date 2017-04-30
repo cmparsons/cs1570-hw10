@@ -35,7 +35,9 @@ void Bully::punch(Tailor & nerd, Town & town) const
   //bully's punch sends tailor to new spot in town
   nerd.place_me(town);
 
-  cout << "PUNCHED by " << m_name  << "!" << endl;
+  clear_line(PRINT_Y, PRINT_X);
+  printw("PUNCHED by %s!", m_name);
+  refresh();
   return;
 }
 
@@ -45,15 +47,19 @@ void Bully::threaten() const
 
   //line corresponding to message that will output on screen
   short line = random(MAX_MESSAGES - 1, 0);
-  string message = "";
+  char message[1000];
 
   //last message received should be message output
   for(int i = 0; i <= line; i++)
-    getline(fin, message); //get the corresponding message
+    fin.getline(message, 1000 - 1); //get the corresponding message
 
   fin.close(); //close the file
 
   //print out the message from the bully
-  cout << m_name << ": " << message << endl;
+  clear_line(PRINT_Y, PRINT_X);
+  move(PRINT_Y, PRINT_X);
+  printw(message);
+  //cout << m_name << ": " << message << endl;
+  refresh();
   return;
 }

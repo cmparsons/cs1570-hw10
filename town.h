@@ -21,6 +21,14 @@ const char EMPTY = ' '; //representation of a blank space in town grid
 const char WALL = 'W'; //representation of a wall in the town grid
 const char HOUSE = 'H'; //representation of a house
 
+//color pair constants
+const int HOUSE_COLOR = 1;
+const int BULLY_COLOR = 2;
+const int WALL_COLOR = 3;
+const int PHANTOM_PANTS_COLOR = 4;
+const int DEFAULT_COLOR = 5;
+const int SPACE_FORMAT = 6;
+
 struct Loc
 {
   char symbol;
@@ -54,7 +62,7 @@ public:
   // Description: Print the current town grid.
   // pre: town_size <= MAX
   // post: Prints the town grid and the contents in each member.
-  friend ostream & operator <<(ostream & out, const Town & foo);
+  friend void operator <<(ostream & out, const Town & foo);
 
   // Description: Constructor for the Town class. Sets the size of the town,
   //              clears, and builds the town.

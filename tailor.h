@@ -11,6 +11,7 @@
 #include "general.h"
 #include "town.h"
 #include "phantom_pants.h"
+#include <cstring>
 
 class Bully;
 class Phantom_Pants;
@@ -28,11 +29,14 @@ const short SELL_PANTS_CHANCE = 70; //chance a house will exchange pants
 
 const char DEFAULT_SYM = 'M'; //default representation for tailor in town
 
+const int PRINT_TAILOR_Y = 18; //cooridnates to print tailor on screen
+const int PRINT_TAILOR_X = 0;
+
 class Tailor
 {
 private:
-  string m_name;
-  float m_money; //current funds
+  char m_name[20];
+  short m_money; //current funds
   char m_symbol; //representation on the town grid
   bool m_alive; //dead/alive status
   Point m_loc; //location (x, y) in town grid
@@ -60,7 +64,7 @@ public:
   //       (DEFAULT_SYM by default). m_money is set to random value from
   //       MIN_START_MONEY to MAX_START_MONEY. m_alive set to true. m_health set
   //       to MAX_HEALTH. m_pants set to PANTS_START.
-  Tailor(string name, char sym = DEFAULT_SYM);
+  Tailor(const char name[], char sym = DEFAULT_SYM);
 
   // Description: Place the Tailor in a random spot in the town.
   // pre: Town cannot be completely filled
@@ -84,7 +88,7 @@ public:
   // Description: Set the Tailor's money member.
   // pre: None
   // post: The Tailor's money member has been set to the passed argument.
-  void set_money(const float money);
+  void set_money(const short money);
 
   // Description: Get the Tailor's location member.
   // pre: None

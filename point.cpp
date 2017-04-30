@@ -11,7 +11,7 @@
 
 ostream & operator <<(ostream & out, const Point & point)
 {
-  out << "(" << point.m_x_coord + 1 << ", " << point.m_y_coord + 1 << ")";
+  printw("(%i, %i)", point.m_x_coord, point.m_y_coord);
   return out;
 }
 
@@ -25,7 +25,6 @@ bool operator !=(const Point & point1, const Point & point2)
 {
   return !(point1 == point2);
 }
-
 
 Point::Point(const short x_coord, const short y_coord)
 {

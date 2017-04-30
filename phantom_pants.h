@@ -16,8 +16,7 @@ class Tailor;
 
 const char PHANTOM_PANTS = 'P'; //representation of Phantom Pants in town
 const short MAX_PHANTOM_PANTS = 3; //max number of phantom pants allowed on grid
-const short PHANTOM_PANTS_STEP_PROB = 25; //probability phantom pants will take
-                                          //a step
+const short PHANTOM_PANTS_STEP_PROB = 25; //probability phantom pants will move
 
 class Phantom_Pants
 {

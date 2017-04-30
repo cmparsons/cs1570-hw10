@@ -27,7 +27,7 @@ const short MAX_MESSAGES = 10; //number of messages in message.dat
 class Bully
 {
 private:
-  string m_name;
+  char m_name[20];
   short m_punch_power;
   short m_punch_probability;
 

@@ -11,23 +11,50 @@
 #include "point.h"
 #include "bully.h"
 
-ostream & operator <<(ostream & out, const Town & town)
+void operator <<(ostream & out, const Town & town)
 {
+  int color;
+
   //i = row, j = column
   for(int i = 0; i < town.town_size; i++)
   {
+    move(i , 0); //move cursor to beginning of every row
     for(int j = 0; j < town.town_size; j++) //print out row i
     {
-      color_town(town.town_grid[i][j].symbol);
-      out << " ";
+      //get the color based on object in space
+      color = color_town(town.town_grid[i][j].symbol);
+
+      //print space with appropriate color
+      attron(COLOR_PAIR(color));
+      addch(town.town_grid[i][j].symbol);
+      attroff(COLOR_PAIR(color));
+
+      //print whitespace between each spot in town
+      attron(COLOR_PAIR(6));
+      addch(' ');
+      attroff(COLOR_PAIR(6));
     }
-    out << "\n";
   }
-  return out;
+  refresh();
+  return;
 }
 
 Town::Town(const short bullies, const short houses, const short size)
 {
+  initscr(); //initialize the screen
+  curs_set(0); //don't show the cursor
+  start_color(); //allow for colored output
+  use_default_colors(); //keep background default terminal color
+
+  //initialize color pairs
+  //(color pair value, foreground, background)
+  init_pair(HOUSE_COLOR, COLOR_YELLOW, COLOR_WHITE);
+  init_pair(BULLY_COLOR, COLOR_RED, COLOR_WHITE);
+  init_pair(WALL_COLOR, COLOR_BLUE, COLOR_WHITE);
+  init_pair(PHANTOM_PANTS_COLOR, COLOR_GREEN, COLOR_WHITE);
+  init_pair(DEFAULT_COLOR, COLOR_BLACK, COLOR_WHITE);
+  init_pair(SPACE_FORMAT, COLOR_WHITE, COLOR_WHITE);
+
   //valid passed size argument
   if(size >= MIN_SIZE && size <= MAX_SIZE)
     town_size = size;
@@ -54,7 +81,6 @@ void Town::clear()
 void Town::build()
 {
   bool placed = false; //determine if object was placed in town
-  short random_direction = 0; //value corresponding to direction
   Point loc; //point in town where something will be placed
 
   //build the wall

@@ -12,6 +12,21 @@
 #include "phantom_pants.h"
 #include "bully.h"
 
+void clear_line(const int line_y, const int line_x)
+{
+  const int MAX_CHARACTERS = 102;
+
+  move(line_y, line_x); //move cursor to coordinates
+
+  //clear line by printing whitespaces
+  for(int i = 0; i < MAX_CHARACTERS; i++)
+    addch(' ');
+
+  refresh();
+  move(line_y, line_x); //move cursor back
+  return;
+}
+
 int percent_probability()
 {
   return random(100, 1);
@@ -20,52 +35,65 @@ int percent_probability()
 void print_final_results(const Tailor & tailor, const bool killed,
   const long step, const Phantom_Pants pants[])
 {
-  cout << "\n\nFINAL RESULTS:\n";
-  cout << "-------------------------------" << endl;
+  int printy = PRINT_Y; //initialize y-component of print
 
-  //print steps tailor took during simulation
-  cout << "Steps: " << step << "\n\n";
+  clear_line(printy, PRINT_X);
+  mvprintw(printy, PRINT_X, "FINAL RESULTS:");
+  mvprintw(printy += 1, PRINT_X, "-------------------------------");
+
+  move(printy += 2, PRINT_X);
+  printw("Steps: %d", step);
+
+  move(printy += 2, PRINT_X);
 
   //print any phantom pants alive in town
   for(int i = 0; i < MAX_PHANTOM_PANTS; i++)
     if(pants[i].get_location() != UNSPAWNED)
+    {
+      clear_line(printy + i, PRINT_X);
       cout << pants[i];
+      move(printy ++, PRINT_X);
+    }
 
-  cout << "\nCause of end: ";
+  mvprintw(printy += 2, PRINT_X, "Cause of end: ");
 
   //print simulation results
   if(killed)
-    cout << "Died from phantom pants!!!!" << endl;
+    printw("Death by phantom pants!!!!");
   else if(tailor.get_health() == DEAD && !killed)
-    cout << "Hit by too many bullies!!!" << endl;
+    printw("Hit by too many bullies!!!");
   else if(tailor.get_pants() == SOLD_ALL)
-    cout << "Sold all the pants!!!!" << endl;
+    printw("Sold all of the pants!!!!");
   else
-    cout << "Reached max steps of " << MAX_STEPS << endl;
+    printw("Reached max steps.");
 
   //print tailor's status at end of simulation
-  cout << tailor << endl;
+  cout << tailor;
+
+  refresh();
   return;
 }
 
-void color_town(const char & object)
+int color_town(const char & object)
 {
+  int color;
+
   switch(object)
   {
     case HOUSE:
-      cout << "\e[93m" << object << "\e[0m";
+      color = 1;
       break;
     case BULLY:
-      cout << "\e[1;31m" << object << "\e[0m";
+      color = 2;
       break;
     case WALL:
-      cout << "\e[1;34m" << object << "\e[0m";
+      color = 3;
       break;
     case PHANTOM_PANTS:
-      cout << "\e[0;32m" << object << "\e[0m";
+      color = 4;
       break;
     default:
-      cout << object;
+      color = 5;
   }
-  return;
+  return color;
 }

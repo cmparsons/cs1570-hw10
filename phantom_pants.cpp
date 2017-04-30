@@ -13,7 +13,8 @@
 
 ostream & operator <<(ostream & out, const Phantom_Pants & pants)
 {
-  out << "Phantom pants at " << pants.m_loc << endl;
+  printw("Phantom pants at ");
+  out << pants.m_loc;
   return out;
 }
 
