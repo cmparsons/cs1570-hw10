@@ -25,6 +25,10 @@ const int NAME = 20;
 const int PRINT_Y = 22; //coordinates to print updates from simulation
 const int PRINT_X = 0;
 
+// Description: Clear line on screen.
+// pre: line_y and line_x cooridnates should be on screen
+// post: Whitespace characters up to MAX_CHARACTERS are added on screen. Cursor
+//       is moved back to (line_y, line_x).
 void clear_line(const int line_y, const int line_x);
 
 // Description: Gets value that corresponds to an object's color.
