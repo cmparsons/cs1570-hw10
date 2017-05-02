@@ -6,6 +6,10 @@
 // Purpose: File contains main function for program that will simulate a
 //          tailor's entrepreneurial adventures.
 
+/******************************
+          USED NCURSES
+******************************/
+
 #include "town.h"
 #include "tailor.h"
 #include "general.h"
@@ -15,7 +19,6 @@
 
 int main(int argc, char* argv[])
 {
-
   const long DELAY = 100000;
 
   srand(time(NULL)); //seed the RNG

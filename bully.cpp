@@ -10,15 +10,23 @@
 #include "tailor.h"
 #include "town.h"
 
+short Bully::bullies_made = 0;
+
 Bully::Bully()
 {
   //static so fin doesn't reset to beginning of file for each bully created
   static ifstream fin("bullies.dat");
 
+  bullies_made++;
   m_punch_probability = PUNCH_PROBABILITY;
   m_punch_power = random(MAX_PUNCH_POWER, MIN_PUNCH_POWER);
 
   fin >> m_name; //read in name from bullies.dat
+
+  //once all bullies in simulation have been constructd, close input file
+  if(bullies_made == NUM_BULLY_NAMES)
+    fin.close();
+
 }
 
 void Bully::punch(Tailor & nerd, Town & town) const
@@ -47,19 +55,19 @@ void Bully::threaten() const
 
   //line corresponding to message that will output on screen
   short line = random(MAX_MESSAGES - 1, 0);
-  char message[1000];
+  char message[MAX_MESSAGE_CHARS];
 
   //last message received should be message output
-  for(int i = 0; i <= line; i++)
-    fin.getline(message, 1000 - 1); //get the corresponding message
+  for(int i = 0; i < line; i++)
+    fin.getline(message, MAX_MESSAGE_CHARS - 1); //get the corresponding message
 
   fin.close(); //close the file
 
   //print out the message from the bully
   clear_line(PRINT_Y, PRINT_X);
   move(PRINT_Y, PRINT_X);
+  printw("%s:", m_name);
   printw(message);
-  //cout << m_name << ": " << message << endl;
   refresh();
   return;
 }

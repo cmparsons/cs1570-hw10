@@ -24,6 +24,7 @@ const short PUNCH = 10; //amount tailor's health is reduced by after punch
 
 const short NUM_BULLY_NAMES = 4; //number of possible names for bullies
 const short MAX_MESSAGES = 10; //number of messages in message.dat
+const short MAX_MESSAGE_CHARS = 1000; //max number of characters in a message
 
 class Bully
 {
@@ -31,6 +32,7 @@ private:
   char m_name[NAME];
   short m_punch_power;
   short m_punch_probability;
+  static short bullies_made;
 
 public:
   // Description: Default constructor for the Bully class.
