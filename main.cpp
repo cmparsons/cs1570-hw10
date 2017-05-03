@@ -16,10 +16,12 @@
 #include "bully.h"
 #include "phantom_pants.h"
 #include <unistd.h>
+#include <cstdlib>
 
 int main(int argc, char* argv[])
 {
-  const long DELAY = 100000;
+  //convert command line argument to long
+  long delay = atol(argv[1]);
 
   srand(time(NULL)); //seed the RNG
 
@@ -80,7 +82,7 @@ int main(int argc, char* argv[])
     pants_left = Milhouse.get_pants();
 
     cout << Milhouse;
-    usleep(DELAY);
+    usleep(delay);
     step++;
   }
   refresh();
