@@ -54,7 +54,7 @@ void Bully::threaten() const
   ifstream fin("message.dat");
 
   //line corresponding to message that will output on screen
-  short line = random(MAX_MESSAGES - 1, 0);
+  short line = random(MAX_MESSAGES, 0);
   char message[MAX_MESSAGE_CHARS];
 
   //last message received should be message output
