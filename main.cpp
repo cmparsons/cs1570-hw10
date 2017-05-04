@@ -21,6 +21,11 @@
 int main(int argc, char* argv[])
 {
   //convert command line argument to long
+  if(argc < 2)
+  {
+    cout << "No argument for delay entered.\n";
+    exit(1);
+  }
   long delay = atol(argv[1]);
 
   srand(time(NULL)); //seed the RNG
